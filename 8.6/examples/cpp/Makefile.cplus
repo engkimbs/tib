@@ -1,0 +1,242 @@
+# Copyright (c) 1998-$Date: 2016-12-13 12:47:31 -0800 (Tue, 13 Dec 2016) $ TIBCO Software Inc.
+# All Rights Reserved. Confidential & Proprietary.
+# TIB/Rendezvous is protected under US Patent No. 5,187,787.
+# For more information, please contact:
+# TIBCO Software Inc., Palo Alto, California, USA
+
+# TIB/Rendezvous Information Bus Example code ( C++ )
+#
+# To compile the examples, please uncomment the sections that represent
+# your environment then built it!
+#
+#
+
+# UNIX (GNU make)
+#
+# if you have AIX uncomment this
+#.SUFFIXES: .cpp
+#
+#O = .o
+#EXE =
+#RM = rm -f
+#OUT = -o
+#TIBRV_DIR = <TIBRV_HOME>
+#DASH_C = -c
+#
+#
+# change the following to match the C++ compiler you use and is
+# compatable with the TIB/Rendezvous libraries provided.
+#
+#CXX = CC
+#
+#LDFLAGS = -L$(TIBRV_DIR)/lib
+#INCFILES = -I$(TIBRV_DIR)/include
+#CXXFLAGS = $(INCFILES)
+#CXXFLAGS += -g
+#TIBRVCPP_LIB = -ltibrvcpp
+#TIBRV_LIB = -ltibrv
+#TIBRVCMFT_LIB = -ltibrvcmq -ltibrvcm -ltibrvft
+#MATH_LIB = -lm
+# System specific options
+#system := $(shell uname -s)
+#ifeq ($(system),Linux)
+#	CFLAGS += -m32
+#	LDFLAGS += -m32
+#	TLIBS = -lpthread
+#endif
+#ifeq ($(system),SunOS)
+#	CFLAGS += -m32
+#	LDFLAGS += -m32
+#	SOCKET_LIBS = -lsocket -lgen -lnsl
+#	TLIBS = -lthread -lrt
+#endif
+#ifeq ($(system),AIX)
+#	TLIBS = -lpthread
+#endif
+#ifeq ($(system),Darwin)
+#	CFLAGS += -m32
+#	LDFLAGS += -m32
+#endif
+
+# Windows (nmake)
+#O=.obj
+#EXE=.exe
+#RM=del
+#TIBRV_DIR=<TIBRV_HOME>
+#INCFILES=/I$(TIBRV_DIR)\include
+#OUT=/Fe
+#LIB=$(LIB);$(TIBRV_DIR)\lib
+#DASH_C=-c
+#
+
+#CXX=cl
+#OPT_DBG_FLGS=/MT
+#CXXFLAGS=$(OPT_DBG_FLGS) $(INCFILES) /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE
+#TIBRVCPP_LIB=libtibrvcpp.lib
+#TIBRV_LIB=tibrv.lib
+#TIBRVCMFT_LIB=tibrvcmq.lib tibrvcm.lib tibrvft.lib
+#
+# Windows needs winsock 2
+#
+#SOCKET_LIBS=ws2_32.lib
+#SYS_LIBS=advapi32.lib
+
+######################################################################
+# IBM i Specific items
+######################################################################
+#
+# IBM Tools for Developers for IBM i, PRPQ 5799-PTL is required for
+# the gmake, icc, and del tools.
+#
+#O=.o
+#EXE=
+#RM=del -fv
+#OUT=-o
+#TIBRV_DIR=<TIBRV_HOME>
+#DASH_C=-c
+#
+#CXX=icc
+#OPT_DBG_FLAGS=-qDBGVIEW=*ALL -qSHOWUSR
+#LDFLAGS=-v -L.
+#INCFILES=-I$(TIBRV_DIR)/include
+#CXXFLAGS=-v $(OPT_DBG_FLAGS) -qTGTCCSID=*JOB -qENUM=4 $(INCFILES)
+#TIBRVCPP_LIB=-ltibrvcpp
+#TIBRV_LIB=libtibrv.so
+#TIBRVCMFT_LIB=libtibrvcmq.so libtibrvcm.so libtibrvft.so
+#
+# The environment variable OUTPUTDIR should be set to the name of the
+# library where module and program objects will be created.
+#
+#export OUTPUTDIR=QGPL
+#
+# The default product library used by RSTLICPGM is TIBRVLIB.  If you
+# used the LIB option to RSTLICPGM to specify a non-default product
+# library, then modify CLIENTLIB accordingly.
+#
+#CLIENTLIB=TIBRVLIB
+#
+# Symbolic links to the service programs in $(CLIENTLIB) must be made
+# for use with icc.
+#
+#all::	libtibrv.so libtibrvcm.so libtibrvcmq.so libtibrvft.so
+#
+#libtibrv.so:
+#	ln -s /QSYS.LIB/$(CLIENTLIB).LIB/LIBTIBRV.SRVPGM $@
+#
+#libtibrvcm.so:
+#	ln -s /QSYS.LIB/$(CLIENTLIB).LIB/LIBTIBRVCM.SRVPGM $@
+#
+#libtibrvcmq.so:
+#	ln -s /QSYS.LIB/$(CLIENTLIB).LIB/LIBTIBRVC0.SRVPGM $@
+#
+#libtibrvft.so:
+#	ln -s /QSYS.LIB/$(CLIENTLIB).LIB/LIBTIBRVFT.SRVPGM $@
+#
+# A symbolic link to the binding directory for libtibrvcpp.a must be
+# created for use with icc.  The binding directory is assumed to have
+# been created from the source in ../../librvcpp.
+#
+#all::	libtibrvcpp.a
+#
+#libtibrvcpp.a:
+#	ln -s /QSYS.LIB/$(OUTPUTDIR).LIB/LIBTIBRVCP.BNDDIR $@
+#
+#clean::
+#	rm -f libtibrv.so
+#	rm -f libtibrvcm.so
+#	rm -f libtibrvcmq.so
+#	rm -f libtibrvft.so
+#	rm -f libtibrvcpp.a
+
+
+
+########################################################################
+# Not all makes define a default target for all the various C++ file
+# suffixes.
+#
+# Uncommend the target rules that best match the make program you are
+# using
+########################################################################
+# NMAKE users uncomment the next two lines
+#.cpp.obj:
+#        $(CXX) $(CXXFLAGS) $(DASH_C) %s
+#
+# UNIX users get to pick from one of these choices depending on which
+# system and which make they are using.
+#
+# The make that comes with with Solaris and  GNU make prefer this.
+#%.o: %.cpp
+#	$(CXX) $(CXXFLAGS) $< $(DASH_C)
+#
+# Other UNIX platforms like this form.
+#.cpp.o:
+#	$(CXX) $(CXXFLAGS) $< $(DASH_C)
+#
+# If you are on AIX make sure you uncomment .SUFFIXES
+# line at the top of the Makefile (this may work on other unix makes as
+# well if make cannot figure out how to turn a .cpp into a .o file.)
+#
+#
+
+OS_LIBS = $(SOCKET_LIBS) $(SYS_LIBS)
+
+BASE_LIBS= $(TIBRVCPP_LIB)
+
+LIBS= $(BASE_LIBS) $(TIBRV_LIB)
+
+CMLIBS= $(BASE_LIBS) $(TIBRVCMFT_LIB) $(TIBRV_LIB)
+
+
+
+all::	tibrvlisten$(EXE) tibrvsend$(EXE) \
+	dispatcher$(EXE) priority$(EXE) \
+	cmsender$(EXE) cmlistener$(EXE) \
+	cmqmember$(EXE) usertypes$(EXE) \
+	tibrvvectoredlisten$(EXE)
+
+clean::
+	$(RM) *$(O)
+	$(RM) core
+	$(RM) tibrvlisten$(EXE)
+	$(RM) tibrvsend$(EXE)
+	$(RM) dispatcher$(EXE)
+	$(RM) priority$(EXE)
+	$(RM) cmsender$(EXE)
+	$(RM) cmlistener$(EXE)
+	$(RM) cmqmember$(EXE)
+	$(RM) usertypes$(EXE)
+	$(RM) tibrvvectoredlisten$(EXE)
+
+#
+# NOTE:  Some linkers will complain about the lack space between the output
+#        parameter and the name of the output file.  You may add a space
+#        between $(OUT) and $@
+#
+
+tibrvlisten$(EXE):	tibrvlisten$(O)
+	$(CXX) $(LDFLAGS) tibrvlisten$(O) $(LIBS) $(OS_LIBS) $(OUT)$@
+
+tibrvsend$(EXE):		tibrvsend$(O)
+	$(CXX) $(LDFLAGS) tibrvsend$(O)  $(LIBS) $(OS_LIBS) $(OUT)$@
+
+priority$(EXE):		priority$(O)
+	$(CXX) $(LDFLAGS) priority$(O)  $(LIBS) $(OS_LIBS) $(OUT)$@
+
+dispatcher$(EXE):	dispatcher$(O)
+	$(CXX) $(LDFLAGS) dispatcher$(O)  $(LIBS) $(OS_LIBS) $(OUT)$@
+
+usertypes$(EXE): usertypes$(O)
+	$(CXX) $(LDFLAGS) usertypes$(O)  $(LIBS) $(OS_LIBS) $(OUT)$@
+
+cmsender$(EXE): cmsender$(O)
+	$(CXX) $(LDFLAGS) cmsender$(O)  $(CMLIBS) $(OS_LIBS) $(OUT)$@
+
+cmlistener$(EXE): cmlistener$(O)
+	$(CXX) $(LDFLAGS) cmlistener$(O)  $(CMLIBS) $(OS_LIBS) $(OUT)$@
+
+cmqmember$(EXE): cmqmember$(O)
+	$(CXX) $(LDFLAGS) cmqmember$(O)  $(CMLIBS) $(OS_LIBS) $(OUT)$@
+
+tibrvvectoredlisten$(EXE):	tibrvvectoredlisten$(O)
+	$(CXX) $(LDFLAGS) tibrvvectoredlisten$(O) $(LIBS) $(OS_LIBS) $(OUT)$@
+

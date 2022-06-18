@@ -1,0 +1,31 @@
+{
+    "realm":{
+        "applicationName":"tibrvadapter",
+        "clientLabel":"rvadapter",
+        "fromFtl":[
+            {
+                "assembleSubject":["My-String"],
+                "discardMessages":false,
+                "expectReplyFormatName":null,
+                "formatName":"Format-1",
+                "replyFieldName":null
+            }
+        ],
+        "services":[
+            {
+                "endpoints":["tibrvadapter-endpoint"],
+                "fromRV":[
+                    {
+                        "discardMessages":false,
+                        "formatName":"RV-to-FTL",
+                        "parseSubject":[{"subject-token":1}],
+                        "replyFieldName":null,
+                        "subjectName":"subject"
+                    }
+                ],
+                "port":"7500"
+            }
+        ],
+        "url":"http://localhost:8080"
+    }
+}

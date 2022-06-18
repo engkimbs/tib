@@ -1,0 +1,101 @@
+{
+    "title":"TIBCO FTL RV Adapter Configuration Schema",
+    "type":"object",
+    "required":["realm"],
+    "additionalProperties":false,
+    "properties":
+    {
+        "realm":
+        {
+            "type":"object",
+            "required":["applicationName", "url", "services"],
+            "applicationName": { "type":"string" },
+            "url": { "type":"string" },
+            "secondaryURL": { "type":"string" },
+            "username": { "type":"string" },
+            "password": { "type":"string" },
+            "fromFTL":
+            {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "$ref":"#/definitions/fromFTLElement" }
+            },
+            "services":
+            {
+                "type":"array",
+                "minItems":1,
+                "uniqueItems":true,
+                "items": { "$ref":"#/definitions/serviceDef" }
+            }
+        }
+    },
+    "definitions":
+    {
+        "fromFTLElement":
+        {
+            "type": "object",
+            "required": ["formatName", "assembleSubject"],
+            "properties":
+            {
+                "formatName": { "type":"string" },
+                "discardMessages": { "type":"boolean" },
+                "replyFieldName": { "type":"string" },
+                "expectReplyFormatName": { "type":"string" },
+                "assembleSubject":
+                {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": false,
+                    "items": { "type":"string" }
+                }
+            }
+        },
+        "parseSubjectArray":
+        {
+            "type":"array",
+            "minItems":1,
+            "items":
+            {
+                "type":"object",
+                "properties": { "[0-9a-zA-Z]+":{"type":"number"} }
+            }
+        },
+        "fromRVElement":
+        {
+            "type":"object",
+            "required": ["formatName", "subjectName", "parseSubject"],
+            "properties":
+            {
+                "formatName": { "type":"string" },
+                "replyFieldName": { "type":"string" },
+                "subjectName": { "type":"string" },
+                "discardMessages": { "type":"boolean" },
+                "parseSubject": { "$ref": "#/definitions/parseSubjectArray" }
+            }
+        },
+        "serviceDef":
+        {
+            "type":"object",
+            "required":["port", "endpoints", "fromRV"],
+            "properties":
+            {
+                "port": { "type":"string" },
+                "endpoints":
+                {
+                    "type":"array",
+                    "minItems":1,
+                    "uniqueItems":true,
+                    "items":{ "type":"string" }
+                },
+                "fromRV":
+                {
+                    "type":"array",
+                    "minItems":1,
+                    "uniqueItems":true,
+                    "items": { "$ref":"#/definitions/fromRVElement" }
+                }
+            }
+        }
+    }
+}

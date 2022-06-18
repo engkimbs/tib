@@ -1,0 +1,12 @@
+#!/bin/bash
+if [ -z "$TIBRV_HOME" ] ; then
+  loc="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+  pushd $loc >/dev/null
+  cd ..
+  TIBRV_HOME=$PWD
+  popd >/dev/null
+fi
+
+CLASSPATH=$TIBRV_HOME/lib/rvconfig.jar:$TIBRV_HOME/lib/bcprov-jdk15on-162.jar:$CLASSPATH
+
+java -d64 -classpath "$CLASSPATH" com.tibco.tibrv.config.tools.TibrvConfigurationTool "$@"
